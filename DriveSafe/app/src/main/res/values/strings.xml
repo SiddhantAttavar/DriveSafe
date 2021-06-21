@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DriveSafe</string>
+    <string name="title_main_activity">Main Activity</string>
+    <string name="title_activity_track_ride">Track Ride</string>
+    <string name="title_activity_statistics">Map</string>
+    <string name="title_past_rides">Past Rides</string>
+    <string name="title_statistics">Statistics</string>
+</resources>
