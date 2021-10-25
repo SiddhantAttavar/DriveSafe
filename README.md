@@ -27,3 +27,11 @@ The app was run on Bangalore roads over 2 months. The acceleration, the speed, t
 Using the data collected, I set appropriate thresholds for the rash driving behaviours. DriveSafe was also tested in different road conditions to test its reliability and accuracy.
 
 DriveSafe can be used to monitor reckless driving behaviours with a high accuracy and improve road safety by individuals, fleet operators, insurance companies, and traffic police.
+
+## Explainer video: <a name = "explainer-video"></a>
+
+<p align = "center">
+    <a href = "https://youtu.be/BaOvaS84id0">
+        <img src = "https://img.youtube.com/vi/BaOvaS84id0/0.jpg">
+    </a>
+</p>
