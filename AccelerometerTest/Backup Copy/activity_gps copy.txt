@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.accelerometertest.GPSActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Get Current Location and City Name"
+            android:layout_weight="0.20"
+            android:gravity="center"
+            android:textSize="20sp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:id="@+id/editTextLocation"
+            android:editable="false">
+            <requestFocus/>
+        </EditText>
+        <LinearLayout
+            android:id="@+id/layButtonH"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:gravity="center"
+            android:layout_weight="0.15">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Location"
+                android:id="@+id/btnLocation"
+                android:onClick="onClick"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layloadingH"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:layout_width="fill_parent"
+            android:gravity="center">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous Screen"
+                android:id="@+id/back_button"
+                android:onClick="previousScreen"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

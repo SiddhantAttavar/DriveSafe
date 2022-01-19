@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AccelerometerTest</string>
+    <string name="title_activity_gps">Map</string>
+    <string name="title_activity_google_maps">Map</string>
+</resources>

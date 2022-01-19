@@ -1,0 +1,220 @@
+package com.example.android.accelerometertest;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import java.text.DecimalFormat;
+
+public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+
+    private static final String TAG = "GoogleMapsActivity"; //For logging
+
+    private LocationManager locationManager = null;
+    private LocationListener locationListener = null;
+
+    static double lastLatitude;
+    static double lastLongitude;
+
+    int minTimeGPS = 5 * 1000;
+    int minDistanceGPS = 0;
+
+    Boolean flag = false;
+
+    int zoom = 15;
+
+    Marker marker;
+
+    double distance;
+    long time;
+    static double speed;
+
+    double speedLimit = 30.0 * (5.0 / 18.0);
+
+    private static DecimalFormat df = new DecimalFormat("0.00"); //Declaring class instance for expressing floats up to 2 significant values
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_google_maps);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        time = System.currentTimeMillis();
+
+        mMap = googleMap;
+
+        marker = mMap.addMarker(new MarkerOptions().position(new LatLng((float) lastLatitude, (float) lastLongitude)));
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car));
+
+        goToLocation((float) lastLatitude, (float) lastLongitude, zoom, marker);
+
+        flag = displayGpsStatus();
+        if (flag) {
+
+            locationListener = new GoogleMapsActivity.MyLocationListener();
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTimeGPS, minDistanceGPS,locationListener);
+
+        } else {
+            alertbox();
+        }
+    }
+
+    public void goToLocation(float latitude, float longitude, int zoom, Marker marker) {
+        LatLng latLng = new LatLng(latitude, longitude);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+        mMap.moveCamera(update);
+        marker.setPosition(latLng);
+        marker.setTitle("My location");
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car));
+        Toast.makeText(this, "Location change" + (speed*18.0/5.0) + latitude + longitude, Toast.LENGTH_SHORT).show();
+    }
+
+    /*----Method to Check GPS is enable or disable ----- */
+    private Boolean displayGpsStatus() {
+        ContentResolver contentResolver = getBaseContext().getContentResolver();
+        boolean gpsStatus = Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
+        if (gpsStatus) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /*----------Method to create an AlertBox ------------- */
+    protected void alertbox() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your Device's GPS is Disable")
+                .setCancelable(false)
+                .setTitle("** Gps Status **")
+                .setPositiveButton("Gps On",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // finish the current activity
+                                // AlertBoxAdvance.this.finish();
+                                Intent myIntent = new Intent(
+                                        Settings.ACTION_SECURITY_SETTINGS);
+                                startActivity(myIntent);
+                                dialog.cancel();
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // cancel the dialog box
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    /*----------Listener class to get coordinates ------------- */
+    private class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location loc) {
+            time = System.currentTimeMillis() - time;
+            long timeSeconds = time / (long) 1000;
+            distance = getDistanceBetween(lastLatitude, lastLongitude, loc.getLatitude(), loc.getLongitude());
+            speed = calculateSpeed(distance, timeSeconds);
+
+            overSpeedingChecker(speed);
+
+            lastLatitude = loc.getLatitude();
+            lastLongitude = loc.getLongitude();
+
+            goToLocation((float) lastLatitude, (float) lastLongitude, zoom, marker);
+
+            time = System.currentTimeMillis();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void onStatusChanged(String provider,
+                                    int status, Bundle extras) {
+            // TODO Auto-generated method stub
+        }
+
+        public Double getDistanceBetween(double lat1, double long1, double lat2, double long2) {
+            if (lat1 == 0.0 || long1 == 0.0 || lat2 == 0.0 || long2 == 0.0) {
+                return 0.0;
+            }
+            float[] result = new float[1];
+            Location.distanceBetween(lat1, long1,
+                    lat2, long2, result);
+            return (double) result[0];
+        }
+
+        public double calculateSpeed(double distance, long time) {
+            double speed = distance / (double) time;
+            return speed;
+        }
+    }
+
+    public void overSpeedingChecker(double speed) {
+        if (speed > speedLimit) {
+            Log.d(TAG, "overSpeedingChecker: Over speeding detected, speed: " + df.format(speed * (18.0 / 5.0)) + "km/h, time: " + System.currentTimeMillis());
+        }
+    }
+}

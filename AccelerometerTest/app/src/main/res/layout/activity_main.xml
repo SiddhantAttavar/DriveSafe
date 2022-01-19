@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.android.accelerometertest.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Accelerometer Data:"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/x_axis"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="16dp" />
+
+            <TextView
+                android:id="@+id/y_axis"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp" />
+
+            <TextView
+                android:id="@+id/z_axis"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Moving Average:"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/x_average"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="16dp" />
+
+            <TextView
+                android:id="@+id/y_average"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp" />
+
+            <TextView
+                android:id="@+id/z_average"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/calibration_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <TextView
+            android:id="@+id/sampling_rate_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp">
+
+            <Button
+                android:id="@+id/sudden_acceleration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:onClick="onAccelerationClick"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="16dp" />
+
+            <Button
+                android:id="@+id/sudden_brake"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:onClick="onBrakeClick"
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp" />
+
+            <Button
+                android:id="@+id/sharp_turn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:onClick="onTurnClick"
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp" />
+
+            <Button
+                android:id="@+id/over_speeding"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="OVER SPEEDING"
+                android:background="@color/green"
+                android:onClick="onSpeedingClick"
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="GPS: "
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="16dp" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="REFRESH GPS"
+                android:onClick="gpsActivityScreen"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="GOOGLE MAPS"
+                android:onClick="googleMapsScreen"
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="8dp" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SAVE FILE"
+            android:onClick="saveFile"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp" />
+
+        <TextView
+            android:id="@+id/volume_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/volume_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="HONKING"/>
+
+    </LinearLayout>
+
+</ScrollView>
